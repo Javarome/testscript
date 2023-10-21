@@ -3,6 +3,7 @@ import path from 'path';
 import { DefaultLogger, Logger } from './log';
 
 export type TestRunnerResult = {
+  success: boolean
   suites: SuiteResult[]
   duration: number
 }
@@ -15,19 +16,22 @@ export type SuiteResult = {
 }
 
 export class TestRunner {
-  constructor(protected glob: string = '**/*Test.ts', readonly logger: Logger = new DefaultLogger('ts-test')) {
+  constructor(protected glob: string = '**/*Test.ts', readonly logger: Logger = new DefaultLogger('testscript')) {
   }
 
   async run(): Promise<TestRunnerResult> {
     const runStart = performance.now();
     const files = await glob(this.glob);
     const suites: SuiteResult[] = [];
+    let success = true;
     for (const filePath of files) {
-      suites.push(await this.runSuite(filePath));
+      let suiteResult = await this.runSuite(filePath);
+      success = success && suiteResult.success
+      suites.push(suiteResult);
     }
     const runEnd = performance.now();
     const duration = runEnd - runStart;
-    return {suites, duration};
+    return {success, suites, duration};
   }
 
   async runSuite(file: string): Promise<SuiteResult> {
@@ -36,7 +40,7 @@ export class TestRunner {
     let error: Error | undefined;
     let success;
     try {
-      this.logger.log('Executing', file);
+      this.logger.debug('Executing', file);
       const c = path.join(process.cwd(), file);
       await import(c);
       success = true;
@@ -47,6 +51,7 @@ export class TestRunner {
       testEnd = performance.now();
     }
     const duration = testEnd - testStart;
+    this.logger.log(success ? 'PASS' : 'FAIL', file, error ? error.stack : '');
     return {file, success, error, duration};
   }
 }

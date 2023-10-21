@@ -19,7 +19,7 @@ export class Expression<T = any> {
   }
 
   toBe(expected: T) {
-    this.check(this.expression != expected, expected)
+    this.check(this.expression == expected, expected)
   }
 
   toBeUndefined() {
