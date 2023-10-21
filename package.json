@@ -1,0 +1,36 @@
+{
+  "name": "ts-test",
+  "type": "module",
+  "author": "Jérôme Beau",
+  "version": "0.1.0",
+  "description": "Simple, straightfoward TypeScript test solution",
+  "exports": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "license": "MIT",
+  "homepage": "https://github.com/Javarome/ts-test#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Javarome/ts-test.git"
+  },
+  "scripts": {
+    "prebuild": "npm install",
+    "build": "rm -Rf dist && tsc --project tsconfig.prod.json",
+    "prepublishOnly": "npm run build && npm test",
+    "test-all": "rm -Rf out && tsx src/test.ts",
+    "ts-one": "rm -Rf out && tsx src/step/DirectoryStepTest.ts"
+  },
+  "dependencies": {
+    "glob-promise": "~6.0.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "tsx": "^3.14.0"
+  },
+  "keywords": [
+    "test",
+    "typescript"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
