@@ -16,7 +16,7 @@
     "prebuild": "npm install",
     "build": "rm -Rf dist && tsc --project tsconfig.prod.json",
     "prepublishOnly": "npm run build && npm test",
-    "test-all": "rm -Rf out && tsx src/test.ts",
+    "test": "rm -Rf out && tsx src/test.ts",
     "ts-one": "rm -Rf out && tsx src/step/DirectoryStepTest.ts"
   },
   "dependencies": {
