@@ -33,7 +33,7 @@ export class Expression<T = any> {
   toEqual(expected: T) {
     let expectedExpr = JSON.stringify(expected);
     let valueExp = JSON.stringify(this.expression);
-    this.check(valueExp != expectedExpr, expected, this.expression)
+    this.check(valueExp == expectedExpr, expected, this.expression)
   }
 }
 
