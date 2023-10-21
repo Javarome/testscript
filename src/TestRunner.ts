@@ -16,12 +16,12 @@ export type SuiteResult = {
 }
 
 export class TestRunner {
-  constructor(protected glob: string = '**/*Test.ts', readonly logger: Logger = new DefaultLogger('testscript')) {
+  constructor(protected globPattern: string = '**/*Test.ts', readonly logger: Logger = new DefaultLogger('testscript')) {
   }
 
   async run(): Promise<TestRunnerResult> {
     const runStart = performance.now();
-    const files = await glob(this.glob);
+    const files = await glob(this.globPattern, {ignore: 'node_modules/**/*.*'});
     const suites: SuiteResult[] = [];
     let success = true;
     for (const filePath of files) {
