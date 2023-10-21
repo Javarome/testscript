@@ -1,21 +1,39 @@
 import { TestError } from './TestError';
 
 export class Expression<T = any> {
+  protected negated = false;
+
   constructor(protected expression: T) {
   }
 
-  toBe(expected: T) {
-    if (this.expression != expected) {
-      throw new TestError(`Got ${this.expression} but expected ${expected}`);
+  get not(): this {
+    this.negated = true;
+    return this;
+  }
+
+  protected check(comparison: boolean, expected: T, expression = this.expression) {
+    let result = this.negated ? !comparison : comparison;
+    if (!result) {
+      throw new TestError(`Got ${expression} but expected ${expected}`);
     }
+  }
+
+  toBe(expected: T) {
+    this.check(this.expression != expected, expected)
+  }
+
+  toBeUndefined() {
+    this.check(this.expression == void 0, 'undefined' as any)
+  }
+
+  toBeDefined() {
+    this.check(this.expression !== void 0, 'defined' as any)
   }
 
   toEqual(expected: T) {
     let expectedExpr = JSON.stringify(expected);
     let valueExp = JSON.stringify(this.expression);
-    if (valueExp != expectedExpr) {
-      throw new TestError(`Got ${expectedExpr} but expected ${valueExp}`);
-    }
+    this.check(valueExp != expectedExpr, expected, this.expression)
   }
 }
 

@@ -15,7 +15,7 @@ export type SuiteResult = {
 }
 
 export class TestRunner {
-  constructor(protected glob: string = '**/*Test.ts', protected logger: Logger = new DefaultLogger('ts-test')) {
+  constructor(protected glob: string = '**/*Test.ts', readonly logger: Logger = new DefaultLogger('ts-test')) {
   }
 
   async run(): Promise<TestRunnerResult> {
@@ -36,7 +36,7 @@ export class TestRunner {
     let error: Error | undefined;
     let success;
     try {
-      this.logger.log('Processing', file);
+      this.logger.log('Executing', file);
       const c = path.join(process.cwd(), file);
       await import(c);
       success = true;
