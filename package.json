@@ -16,8 +16,8 @@
     "prebuild": "npm install",
     "build": "rm -Rf dist && tsc --project tsconfig.prod.json",
     "prepublishOnly": "npm run build && npm test",
-    "test": "rm -Rf out && tsx src/test/testAll.ts",
-    "ts-one": "rm -Rf out && tsx src/test/ToBeTest.ts"
+    "test": "tsx src/test/testAll.ts",
+    "test-one": "tsx src/test/ToBeTest.ts"
   },
   "dependencies": {
     "glob-promise": "~6.0.5"
