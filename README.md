@@ -10,7 +10,7 @@ The alternative here is as follows:
   tsx src/MyTest.ts
   ````
   will throw an Error if the test doesn't pass (this will work with a tsx alternative as well but tsx makes it even easier).
-- Keep syntax (`describe()`, `test()`, `expect()`...) as similar as possible to the syntax used by [Jest](https://jestjs.io), which is the most popular framework to test JS/TS.
+- Keep syntax as similar as possible to the syntax used by [Jest](https://jestjs.io) (`describe()`, `test()`, `expect()`...) , which is the most popular framework to test JS/TS.
 ```ts
 import { describe, expect, test } from '@javarome/testscript';
 
