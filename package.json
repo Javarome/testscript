@@ -1,5 +1,5 @@
 {
-  "name": "testscript",
+  "name": "@javarome/testscript",
   "type": "module",
   "author": "Jérôme Beau",
   "version": "0.1.0",
