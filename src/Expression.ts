@@ -3,7 +3,7 @@ import { TestError } from './TestError';
 export class Expression<T = any> {
   protected negated = false;
 
-  constructor(protected expression: T) {
+  constructor(protected value: T) {
   }
 
   get not(): this {
@@ -11,32 +11,42 @@ export class Expression<T = any> {
     return this;
   }
 
-  protected check(comparison: boolean, expected: T, expression = this.expression) {
-    let result = this.negated ? !comparison : comparison;
+  diffIndex(s1: string, s2: string): number {
+    const s1Chars = [...s1].sort();
+    const s2Chars = [...s2].sort();
+    return s2Chars.findIndex((char, i) => char !== s1Chars[i]) + 1;
+  }
+
+  protected check(comparison: boolean, expected: T, value = this.value) {
+    const result = this.negated ? !comparison : comparison;
     if (!result) {
-      throw new TestError(`Got ${this.valueStr(expression)} but expected ${this.valueStr(expected)}`);
+      const valueStr = this.valueStr(value);
+      const expectedStr = this.valueStr(expected);
+      const diffIndex = this.diffIndex(valueStr, expectedStr);
+      throw new TestError(`Got ${valueStr} instead of ${expectedStr}, because at pos ${diffIndex} ${this.valueStr(
+        valueStr[diffIndex] as any)} is different from ${this.valueStr(expectedStr[diffIndex] as any)}`);
     }
   }
 
   toBe(expected: T) {
-    this.check(this.expression == expected, expected);
+    this.check(this.value == expected, expected);
   }
 
   toBeUndefined() {
-    this.check(this.expression == void 0, 'undefined' as any);
+    this.check(this.value == void 0, 'undefined' as any);
   }
 
   toBeDefined() {
-    this.check(this.expression !== void 0, 'defined' as any);
+    this.check(this.value !== void 0, 'defined' as any);
   }
 
   toEqual(expected: T) {
     let expectedExpr = JSON.stringify(expected);
-    let valueExp = JSON.stringify(this.expression);
-    this.check(valueExp == expectedExpr, expected as any, this.expression as any);
+    let valueExp = JSON.stringify(this.value);
+    this.check(valueExp == expectedExpr, expected as any, this.value as any);
   }
 
-  protected valueStr(value: T): string {
+  valueStr(value: T): string {
     let type = typeof value;
     switch (type) {
       case 'undefined':
