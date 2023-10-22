@@ -1,4 +1,5 @@
 import { TestError } from './TestError';
+import { AnsiColor } from './AnsiColor';
 
 export class Expression<T = any> {
   protected negated = false;
@@ -11,10 +12,20 @@ export class Expression<T = any> {
     return this;
   }
 
-  diffIndex(s1: string, s2: string): number {
-    const s1Chars = [...s1].sort();
-    const s2Chars = [...s2].sort();
-    return s2Chars.findIndex((char, i) => char !== s1Chars[i]) + 1;
+  ansiDiff(valueStr: string, expectedStr: string): string {
+    let diffStr = ''
+    let color = AnsiColor.bgGreen;
+    let colorStart = 0;
+    for (let i = 0; i < expectedStr.length; ++i) {
+      const newColor = valueStr.charAt(i) == expectedStr.charAt(i) ? AnsiColor.bgGreen : AnsiColor.bgRed;
+      if (color !== newColor) {
+        diffStr += AnsiColor.str(valueStr.substring(colorStart, i), AnsiColor.fgBlack, color)
+        colorStart = i;
+        color = newColor;
+      }
+    }
+    diffStr += AnsiColor.str(valueStr.substring(colorStart, valueStr.length), AnsiColor.fgBlack, color)
+    return diffStr
   }
 
   protected check(comparison: boolean, expected: T, value = this.value) {
@@ -22,9 +33,7 @@ export class Expression<T = any> {
     if (!result) {
       const valueStr = this.valueStr(value);
       const expectedStr = this.valueStr(expected);
-      const diffIndex = this.diffIndex(valueStr, expectedStr);
-      throw new TestError(`Got ${valueStr} instead of ${expectedStr}, because at pos ${diffIndex} ${this.valueStr(
-        valueStr[diffIndex] as any)} is different from ${this.valueStr(expectedStr[diffIndex] as any)}`);
+      throw new TestError(`Got ${this.ansiDiff(valueStr, expectedStr)!} but expected ${expectedStr}`);
     }
   }
 

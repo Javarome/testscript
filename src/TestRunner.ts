@@ -1,6 +1,7 @@
 import { promise as glob } from 'glob-promise';
 import path from 'path';
 import { DefaultLogger, Logger } from './log';
+import { AnsiColor } from './AnsiColor';
 
 export type TestRunnerResult = {
   suites: SuiteResult[]
@@ -11,12 +12,6 @@ export type SuiteResult = {
   file: string
   error?: Error
   duration: number
-}
-
-export enum AnsiColor {
-  red = '31m',
-  green = '32m',
-  white = '37m',
 }
 
 export class TestRunner {
@@ -42,12 +37,6 @@ export class TestRunner {
     return {suites, duration};
   }
 
-  colored(str: string, color: AnsiColor) {
-    const ansiPrefix = '\x1b[';
-    const ansiReset = '0m';
-    return ansiPrefix + color + str + ansiPrefix + ansiReset;
-  }
-
   async runSuite(file: string): Promise<SuiteResult> {
     const testStart = performance.now();
     let testEnd: number;
@@ -65,17 +54,17 @@ export class TestRunner {
     let status: string;
     let details: string | undefined;
     if (error) {
-      status = this.colored('FAIL', AnsiColor.red);
+      status = AnsiColor.str('FAIL', AnsiColor.fgRed);
       let stack = error.stack;
       if (stack) {
         let items = this.errorRegExp.exec(stack);
         if (items && items.length > 0) {
-          details = this.colored(items[2] + '\n' + items[3], AnsiColor.red);
+          details = AnsiColor.str(items[2] + '\n' + items[3], AnsiColor.fgRed);
         }
       }
     } else {
-      status = this.colored('PASS', AnsiColor.green);
-      details = this.colored(`(${this.durationStr(duration)})`, AnsiColor.white);
+      status = AnsiColor.str('PASS', AnsiColor.fgGreen);
+      details = AnsiColor.str(`(${this.durationStr(duration)})`, AnsiColor.fgWhite);
     }
     this.logger.log(status, file, details || '');
     return {file, duration, error};
