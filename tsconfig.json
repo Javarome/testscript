@@ -3,7 +3,7 @@
     "declaration": true,
     "strict": true,
     "module": "ES2020",
-    "target": "ES2018",
+    "target": "ES2020",
     "moduleResolution": "node",
     "lib": [
       "ES2020"
