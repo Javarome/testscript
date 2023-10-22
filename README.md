@@ -10,7 +10,7 @@ The alternative here is as follows:
   tsx src/MyTest.ts
   ````
   will throw an Error if the test doesn't pass (this will work with a tsx alternative as well but tsx makes it even easier).
-- Keep syntax as similar as possible to the syntax used by [Jest](https://jestjs.io) (`describe()`, `test()`, `expect()`...) , which is the most popular framework to test JS/TS.
+- Keep syntax as similar as possible to the syntax used by [Jest](https://jestjs.io) (`describe()`, `test()`, `expect()`, `beforeEach()`...) , which is the most popular framework to test JS/TS.
 ```ts
 import { describe, expect, test } from '@javarome/testscript';
 
@@ -39,7 +39,20 @@ runner.run().then(result => {
 ````
 will output:
 ```
-testscript: PASS src/test/MyTest.ts 
-testscript: PASS src/test/MyTest2.ts 
-testscript: Executed 2 test suites in 22.802 ms
+testscript: PASS src/test/MyTest.ts (2.46 ms)
+testscript: PASS src/test/MyTest2.ts (1.93 ms)
+testscript: All 2 test suites succeeded in 4.80 ms
+```
+And an error will output as:
+```
+testscript: PASS src/test/MyTest.ts (2.46 ms)
+testscript: FAIL src/test/MyTest2.ts Got "stsr" but expected "str"
+    at describe (/Users/jerome/perso/testscript/src/TestSuite.ts:8:3)
+    at <anonymous> (/Users/jerome/perso/testscript/src/test/MyTest2.ts:4:1)
+    at ModuleJob.run (node:internal/modules/esm/module_job:193:25)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async Promise.all (index 0)
+    at async ESMLoader.import (node:internal/modules/esm/loader:530:24)
+    at TestRunner.runSuite (/Users/jerome/perso/testscript/src/TestRunner.ts:58:7)
+testscript: 1/2 test suites succeeded, 1 failed (4.50 ms)
 ```

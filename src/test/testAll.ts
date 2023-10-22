@@ -1,11 +1,19 @@
-import { TestRunner } from '../TestRunner';
+import { AnsiColor, TestRunner } from '../TestRunner';
 import { TestError } from '../TestError';
 
 const runner = new TestRunner();
 runner.run().then(result => {
-  runner.logger.log('Executed', result.suites.length, 'test suites in', new Intl.NumberFormat().format(result.duration),
-    'ms');
-  if (!result.success) {
-    throw new TestError('Tests run failed')
+  const successCount = runner.successCount(result);
+  let total = result.suites.length;
+  let totalTime = runner.colored(`(${runner.durationStr(result.duration)})`, AnsiColor.white);
+  const success = successCount === total;
+  if (success) {
+    runner.logger.log(runner.colored(`All ${total} test suites succeeded`, AnsiColor.green), totalTime);
+  } else {
+    const errorSummary = !success ? ', ' + runner.colored(`${total - successCount} failed`, AnsiColor.red) : '';
+    runner.logger.log(`${successCount}/${total} test suites succeeded` + errorSummary, totalTime);
+  }
+  if (!success) {
+    throw new TestError('Tests run failed');
   }
 });
