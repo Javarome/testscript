@@ -69,7 +69,7 @@ export class TestRunner {
       let stack = error.stack;
       if (stack) {
         let items = this.errorRegExp.exec(stack);
-        if (items?.length > 0) {
+        if (items && items.length > 0) {
           details = this.colored(items[2] + '\n' + items[3], AnsiColor.red);
         }
       }
