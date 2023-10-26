@@ -33,7 +33,7 @@ export class Expression<T = any> {
     if (!result) {
       const valueStr = this.valueStr(value);
       const expectedStr = this.valueStr(expected);
-      throw new TestError(`Got ${this.ansiDiff(valueStr, expectedStr)!} but expected ${expectedStr}`);
+      throw new TestError(`Got ${this.ansiDiff(valueStr, expectedStr)!} instead of ${expectedStr}`);
     }
   }
 

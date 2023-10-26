@@ -74,6 +74,12 @@ export class TestRunner {
     return this.numberFormat.format(value) + ' ms';
   }
 
+  isSuccess(result: TestRunnerResult) : boolean {
+    const successCount = this.successCount(result);
+    const total = result.suites.length;
+    return successCount === total;
+  }
+
   successCount(result: TestRunnerResult) : number {
     return result.suites.reduce((count, suite) => {
       count += suite.error ? 0 : 1;

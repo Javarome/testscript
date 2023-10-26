@@ -26,33 +26,27 @@ describe("Some software item", () => {
 - The only remaining thing you need is a [`TestRunner`](https://github.com/Javarome/testscript/blob/main/src/TestRunner.ts) to execute a bunch of tests given a file pattern. 
   Using it, it's pretty easy to write your [main test program](https://github.com/Javarome/testscript/blob/main/src/test/testAll.ts) like below:
 ```ts
-import { TestRunner } from '../TestRunner';
-import { TestError } from '../TestError';
+import { TestRunner, TestError } from '@javarome/testscript';
 
 const runner = new TestRunner('**/*.test.ts');
 runner.run().then(result => {
-  runner.logger.log('Executed', result.suites.length, 'test suites in', result.duration, 'ms');
-  if (!result.success) {
-    throw new TestError('Tests run failed')
+  const successCount = runner.successCount(result);
+  const total = result.suites.length;
+  const totalTime = `(${runner.durationStr(result.duration)})`;
+  const success = runner.isSuccess(result);
+  if (success) {
+    runner.logger.log(`All ${total} test suites succeeded`, totalTime);
+  } else {
+    const errorSummary = !success ? ', ' + `${total - successCount} failed` : '';
+    runner.logger.log(`${successCount}/${total} test suites succeeded` + errorSummary, totalTime);
+  }
+  if (!success) {
+    throw new TestError('Tests run failed');
   }
 });
 ````
 will output:
-```
-testscript: PASS src/test/MyTest.ts (2.46 ms)
-testscript: PASS src/test/MyTest2.ts (1.93 ms)
-testscript: All 2 test suites succeeded in 4.80 ms
-```
+![Test runner failure output](docs/TestRunner-success.png)
 And an error will output as:
-```
-testscript: PASS src/test/MyTest.ts (2.46 ms)
-testscript: FAIL src/test/MyTest2.ts Got "stsr" but expected "str"
-    at describe (/Users/jerome/perso/testscript/src/TestSuite.ts:8:3)
-    at <anonymous> (/Users/jerome/perso/testscript/src/test/MyTest2.ts:4:1)
-    at ModuleJob.run (node:internal/modules/esm/module_job:193:25)
-    at processTicksAndRejections (node:internal/process/task_queues:96:5)
-    at async Promise.all (index 0)
-    at async ESMLoader.import (node:internal/modules/esm/loader:530:24)
-    at TestRunner.runSuite (/Users/jerome/perso/testscript/src/TestRunner.ts:58:7)
-testscript: 1/2 test suites succeeded, 1 failed (4.50 ms)
-```
+
+![Test runner failure output](docs/TestRunner-fail.png)

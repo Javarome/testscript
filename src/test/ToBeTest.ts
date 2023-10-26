@@ -1,10 +1,10 @@
-import { describe } from '../TestSuite';
 import { expect } from '../Expression';
+import { describe } from '../TestSuite';
 
 describe('expect(toBeTested).toBe(expected)', () => {
   expect(1).toBe(1)
   expect('str').toBe('str')
-  expect('strAxxd').not.toBe('strAbcd')
+  expect('strAxxde').not.toBe('strAbcd')
   expect(2).not.toBe(1)
   expect(undefined).toBe(undefined)
 })

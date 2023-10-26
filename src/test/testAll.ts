@@ -5,9 +5,9 @@ import { AnsiColor } from '../AnsiColor';
 const runner = new TestRunner();
 runner.run().then(result => {
   const successCount = runner.successCount(result);
-  let total = result.suites.length;
-  let totalTime = AnsiColor.str(`(${runner.durationStr(result.duration)})`, AnsiColor.fgWhite);
-  const success = successCount === total;
+  const total = result.suites.length;
+  const totalTime = AnsiColor.str(`(${runner.durationStr(result.duration)})`, AnsiColor.fgWhite);
+  const success = runner.isSuccess(result);
   if (success) {
     runner.logger.log(AnsiColor.str(`All ${total} test suites succeeded`, AnsiColor.fgGreen), totalTime);
   } else {
