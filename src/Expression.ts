@@ -51,6 +51,10 @@ export class Expression<T = any> {
     this.check(this.value !== void 0, 'defined' as any);
   }
 
+  toBeNull(): boolean {
+    return this.value === null
+  }
+
   toEqual(expected: T) {
     let expectedExpr = JSON.stringify(expected);
     let valueExp = JSON.stringify(this.value);
