@@ -15,10 +15,10 @@ export type SuiteResult = {
 }
 
 export class TestRunner {
-  constructor(protected globPattern: string = '**/*Test.ts',
-              readonly logger: Logger = new DefaultLogger('testscript'),
-              readonly errorRegExp = /.*(Error: (.+)\n)[\s\S]*?src\/test\/ToBeTest.ts:\d+:\d+\)\n([\s\S]*)/gm,
-              readonly numberFormat = new Intl.NumberFormat(undefined, {maximumFractionDigits: 2})
+  constructor(
+    protected globPattern: string = '**/*Test.ts',
+    readonly logger: Logger = new DefaultLogger('testscript'),
+    readonly numberFormat = new Intl.NumberFormat(undefined, {maximumFractionDigits: 2})
   ) {
   }
 
@@ -57,7 +57,10 @@ export class TestRunner {
       status = AnsiColor.str('FAIL', AnsiColor.fgRed);
       let stack = error.stack;
       if (stack) {
-        let items = this.errorRegExp.exec(stack);
+        let filePattern = file.replaceAll('/', '\/');
+        const errorRegExp = new RegExp(`.*(Error: (.+)\\n)[\\s\\S]*?${filePattern}:\\d+:\\d+\\)\n([\\s\\S]*)`,
+          'gm');
+        let items = errorRegExp.exec(stack);
         if (items && items.length > 0) {
           details = AnsiColor.str(items[2] + '\n' + items[3], AnsiColor.fgRed);
         }
@@ -74,13 +77,13 @@ export class TestRunner {
     return this.numberFormat.format(value) + ' ms';
   }
 
-  isSuccess(result: TestRunnerResult) : boolean {
+  allSucceeded(result: TestRunnerResult): boolean {
     const successCount = this.successCount(result);
     const total = result.suites.length;
     return successCount === total;
   }
 
-  successCount(result: TestRunnerResult) : number {
+  successCount(result: TestRunnerResult): number {
     return result.suites.reduce((count, suite) => {
       count += suite.error ? 0 : 1;
       return count;

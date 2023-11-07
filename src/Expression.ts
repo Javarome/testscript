@@ -13,19 +13,19 @@ export class Expression<T = any> {
   }
 
   ansiDiff(valueStr: string, expectedStr: string): string {
-    let diffStr = ''
+    let diffStr = '';
     let color = AnsiColor.bgGreen;
     let colorStart = 0;
     for (let i = 0; i < expectedStr.length; ++i) {
       const newColor = valueStr.charAt(i) == expectedStr.charAt(i) ? AnsiColor.bgGreen : AnsiColor.bgRed;
       if (color !== newColor) {
-        diffStr += AnsiColor.str(valueStr.substring(colorStart, i), AnsiColor.fgBlack, color)
+        diffStr += AnsiColor.str(valueStr.substring(colorStart, i), AnsiColor.fgBlack, color);
         colorStart = i;
         color = newColor;
       }
     }
-    diffStr += AnsiColor.str(valueStr.substring(colorStart, valueStr.length), AnsiColor.fgBlack, color)
-    return diffStr
+    diffStr += AnsiColor.str(valueStr.substring(colorStart, valueStr.length), AnsiColor.fgBlack, color);
+    return diffStr;
   }
 
   protected check(comparison: boolean, expected: T, value = this.value) {
@@ -33,7 +33,9 @@ export class Expression<T = any> {
     if (!result) {
       const valueStr = this.valueStr(value);
       const expectedStr = this.valueStr(expected);
-      throw new TestError(`Got ${this.ansiDiff(valueStr, expectedStr)!} instead of ${expectedStr}`);
+      throw new TestError(
+        `Got ${this.ansiDiff(valueStr, expectedStr)!} ${AnsiColor.str(`instead of ${(this.negated ? 'not ' : '') +
+         expectedStr}`, AnsiColor.fgRed)}`);
     }
   }
 
