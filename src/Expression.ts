@@ -17,7 +17,7 @@ export class Expression<T = any> {
     let color = AnsiColor.bgGreen;
     let colorStart = 0;
     for (let i = 0; i < expectedStr.length; ++i) {
-      const newColor = valueStr.charAt(i) == expectedStr.charAt(i) ? AnsiColor.bgGreen : AnsiColor.bgRed;
+      const newColor = valueStr.charAt(i) === expectedStr.charAt(i) ? AnsiColor.bgGreen : AnsiColor.bgRed;
       if (color !== newColor) {
         diffStr += AnsiColor.str(valueStr.substring(colorStart, i), AnsiColor.fgBlack, color);
         colorStart = i;
@@ -51,8 +51,8 @@ export class Expression<T = any> {
     this.check(this.value !== void 0, 'defined' as any);
   }
 
-  toBeNull(): boolean {
-    return this.value === null
+  toBeNull() {
+    this.check(this.value === null, 'null' as any);
   }
 
   toEqual(expected: T) {

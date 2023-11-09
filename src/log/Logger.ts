@@ -1,4 +1,4 @@
-type logMethod = { (message?: any, ...optionalParams: any[]): void; (...data: any[]): void }
+export type logMethod = { (message?: any, ...optionalParams: any[]): void; (...data: any[]): void }
 
 export interface Logger {
   name: string

@@ -3,7 +3,7 @@ import {Logger} from "./Logger"
 const NOP = () => {
 }
 
-const envLogLevels = process.env.LOG_LEVEL?.split(",") ?? ["info", "warn", "error"]
+const defaultLogLevels = ["info", "warn", "error"]
 
 export interface LogConsole {
   log(...data: any[]): void
@@ -27,6 +27,6 @@ export class DefaultLogger implements Logger {
   readonly error = this.logLevels.includes("error") ? (...data: any[]) => this.console.error(this.name + ":",
     ...data) : NOP
 
-  constructor(public name: string, protected console: LogConsole = defaultConsole, protected logLevels = envLogLevels) {
+  constructor(public name: string, protected console: LogConsole = defaultConsole, protected logLevels = defaultLogLevels) {
   }
 }
