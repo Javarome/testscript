@@ -1,3 +1,5 @@
+#!/usr/bin/env tsx
+
 import { TestRunner } from '../TestRunner';
 import { TestError } from '../TestError';
 import { AnsiColor } from '../AnsiColor';

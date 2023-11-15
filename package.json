@@ -2,7 +2,7 @@
   "name": "@javarome/testscript",
   "type": "module",
   "author": "Jérôme Beau (javarome@gmail.com)",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Simple, straightfoward TypeScript test solution",
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -18,6 +18,9 @@
     "prepublishOnly": "npm run build && npm test",
     "test": "tsx src/test/testAll.ts",
     "test-one": "tsx src/test/ToBeTest.ts"
+  },
+  "bin": {
+    "testAll": "src/test/testAll.ts"
   },
   "dependencies": {
     "glob-promise": "~6.0.5"
