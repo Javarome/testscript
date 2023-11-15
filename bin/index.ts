@@ -1,9 +1,7 @@
 #!/usr/bin/env tsx
 
-import { TestRunner } from '../TestRunner';
-import { TestError } from '../TestError';
-import { AnsiColor } from '../AnsiColor';
 import * as process from 'process';
+import { AnsiColor, TestError, TestRunner } from '../src';
 
 const testFilesPattern = process.argv[2] || process.env.TESTSCRIPT_FILES || '**/*Test.ts';
 const runner = new TestRunner(testFilesPattern);
