@@ -3,7 +3,7 @@
 import * as process from 'process';
 import { AnsiColor, TestError, TestRunner } from '../src';
 
-const testFilesPattern = process.argv[2] || process.env.TESTSCRIPT_FILES || '**/*Test.ts';
+const testFilesPattern = process.argv[2] || process.env.TESTSCRIPT_FILES || '**/*.test.ts';
 const runner = new TestRunner(testFilesPattern);
 runner.run().then(result => {
   const successCount = runner.successCount(result);
