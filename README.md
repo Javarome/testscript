@@ -28,31 +28,11 @@ describe("Some software item", () => {
 ```
 
 - The only remaining thing you need is a [`TestRunner`](https://github.com/Javarome/testscript/blob/main/src/TestRunner.ts) to execute a bunch of tests given a file pattern.
-  Using it, it's pretty easy to write your [main test program](https://github.com/Javarome/testscript/blob/main/src/test/testAll.ts) like below:
-
-```ts
-// testAll.ts
-import { TestRunner, TestError } from '@javarome/testscript';
-
-const runner = new TestRunner(); // Look for *Test.ts files by default
-runner.run().then(result => {
-  const total = result.suites.length;
-  const totalTime = `(${runner.durationStr(result.duration)})`;
-  const success = runner.allSucceeded(result);
-  if (success) {
-    runner.logger.log(`All ${total} test suietes succeeded`, totalTime);
-  } else {
-    const successCount = runner.successCount(result);
-    const errorSummary = !success ? ', ' + `${total - successCount} failed` : '';
-    runner.logger.log(`${successCount}/${total} test suites succeeded` + errorSummary, totalTime);
-  }
-  if (!success) {
-    throw new TestError('Tests run failed');
-  }
-});
+  Using it, it's pretty easy to write your [main test program](https://github.com/Javarome/testscript/blob/main/src/test/testAll.ts), 
+  but you can also just install `tsx` and invoke this command:
+```
+testscript
 ````
-
-You can then run it as a casual script:
 
 ## Debugging
 
@@ -61,7 +41,7 @@ The TestRunner uses a `DefaultLogger` instance as a `Logger`, which can be speci
 ````json
 {
   "scripts": {
-    "test": "tsx test/testAll.ts"
+    "test": "testscript"
   }
 }
 ````
