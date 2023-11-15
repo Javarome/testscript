@@ -1,8 +1,10 @@
 import { TestRunner } from '../TestRunner';
 import { TestError } from '../TestError';
 import { AnsiColor } from '../AnsiColor';
+import * as process from 'process';
 
-const runner = new TestRunner();
+const testFilesPattern = process.argv[0] || process.env.TESTSCRIPT_FILES || '**/*Test.ts';
+const runner = new TestRunner(testFilesPattern);
 runner.run().then(result => {
   const successCount = runner.successCount(result);
   const total = result.suites.length;

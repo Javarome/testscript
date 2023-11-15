@@ -16,7 +16,7 @@ export type SuiteResult = {
 
 export class TestRunner {
   constructor(
-    protected globPattern: string = '**/*Test.ts',
+    protected globPattern: string,
     readonly logger: Logger = new DefaultLogger('testscript'),
     readonly numberFormat = new Intl.NumberFormat(undefined, {maximumFractionDigits: 2})
   ) {
