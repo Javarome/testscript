@@ -16,7 +16,7 @@
     "prebuild": "npm install",
     "build": "rm -Rf dist && tsc --project tsconfig.prod.json",
     "prepublishOnly": "npm run build && npm test",
-    "test": "tsx src/test/testAll.ts",
+    "test": "npx .",
     "test-one": "tsx src/test/ToBeTest.ts"
   },
   "bin": {
