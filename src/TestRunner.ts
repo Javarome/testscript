@@ -20,11 +20,13 @@ export class TestRunner {
     readonly logger: Logger = new DefaultLogger('testscript'),
     readonly numberFormat = new Intl.NumberFormat(undefined, {maximumFractionDigits: 2})
   ) {
+    logger.debug('globPattern', `"${this.globPattern}"`)
   }
 
   async run(): Promise<TestRunnerResult> {
     const runStart = performance.now();
     const files = await glob(this.globPattern, {ignore: 'node_modules/**/*.*'});
+    this.logger.debug('files', files)
     const suites: SuiteResult[] = [];
     let success = true;
     for (const filePath of files) {

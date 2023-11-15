@@ -2,7 +2,7 @@
   "name": "@javarome/testscript",
   "type": "module",
   "author": "Jérôme Beau (javarome@gmail.com)",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Simple, straightfoward TypeScript test solution",
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
