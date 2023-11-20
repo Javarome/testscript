@@ -48,6 +48,10 @@ By default it will look for all `*.test.ts` files in all subdirs, but you can sp
 ```
 testscript **/*.spec.ts
 ````
+By default `node_modules` are ignored. You can also customize those excluded paths by specifying a second argument, which can be an array of paths:
+```
+testscript **/*.test.ts '{out/**,node_modules/**/*.*}'
+```
 
 ## Debugging
 
@@ -65,4 +69,4 @@ Once you have your test scripts ready in your `package.json`, like below:
 All you need to need all or one test is to set your breakpoints in your tests 
 and run those scripts in debug mode.
 
-Also note that the `TestRunner` uses a `DefaultLogger` instance as a `Logger`, which can be specified as its second constructor argument.
+Also note that the `TestRunner` uses a `DefaultLogger` instance as a `Logger`, which can be specified as its third constructor argument.

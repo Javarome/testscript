@@ -2,7 +2,7 @@
   "name": "@javarome/testscript",
   "type": "module",
   "author": "Jérôme Beau (javarome@gmail.com)",
-  "version": "0.8.5",
+  "version": "0.10.5",
   "description": "Simple, straightfoward TypeScript test solution",
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -23,11 +23,12 @@
     "testscript": "bin/index.ts"
   },
   "dependencies": {
-    "glob-promise": "~6.0.5"
+    "glob": "~10.3.10"
   },
   "devDependencies": {
-    "typescript": "^5.2.2",
-    "tsx": "^3.14.0"
+    "@types/node": "^20.9.2",
+    "tsx": "^3.14.0",
+    "typescript": "^5.2.2"
   },
   "keywords": [
     "test",

@@ -2,9 +2,13 @@
 
 import * as process from 'process';
 import { AnsiColor, TestError, TestRunner } from '../src';
+import { CLI } from '../src/cli/CLI';
+import { FilesArgs } from '../src/cli/FilesArgs';
 
-const testFilesPattern = process.argv[2] || process.env.TESTSCRIPT_FILES || '**/*.test.ts';
-const runner = new TestRunner(testFilesPattern);
+const args = new CLI().getArgs<FilesArgs>();
+const includePattern = args.include || process.env.TESTSCRIPT_INCLUDE?.split(",") || ['**/*.test.ts']
+const excludePattern = args.exclude || process.env.TESTSCRIPT_EXCLUDE?.split(",") || ['node_modules/**/*.*']
+const runner = new TestRunner(includePattern, excludePattern);
 runner.run().then(result => {
   const successCount = runner.successCount(result);
   const total = result.suites.length;
