@@ -63,3 +63,4 @@ Once you have your test scripts ready in your `package.json`, all you need to ne
 and run those scripts in debug mode.
 
 Also note that the `TestRunner` uses a `DefaultLogger` instance as a `Logger`, which can be specified as its third constructor argument.
+You can also set the `LOGLEVEL` env var to include `debug`.

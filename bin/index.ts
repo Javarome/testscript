@@ -6,9 +6,9 @@ import { CLI } from '../src/cli/CLI';
 import { FilesArgs } from '../src/cli/FilesArgs';
 
 const args = new CLI().getArgs<FilesArgs>();
-const includePattern = args.include || process.env.TESTSCRIPT_INCLUDE?.split(",") || ['**/*.test.ts']
-const excludePattern = args.exclude || process.env.TESTSCRIPT_EXCLUDE?.split(",") || ['node_modules/**/*.*']
-const runner = new TestRunner(includePattern, excludePattern);
+const include = args.include || process.env.TESTSCRIPT_INCLUDE?.split(",") || ['**/*.test.ts']
+const exclude = args.exclude || process.env.TESTSCRIPT_EXCLUDE?.split(",") || ['node_modules/**/*.*']
+const runner = new TestRunner(include, exclude);
 runner.run().then(result => {
   const successCount = runner.successCount(result);
   const total = result.suites.length;
