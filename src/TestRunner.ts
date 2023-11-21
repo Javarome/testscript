@@ -22,7 +22,7 @@ export class TestRunner {
     readonly logger: Logger = new DefaultLogger('testscript'),
     readonly numberFormat = new Intl.NumberFormat(undefined, {maximumFractionDigits: 2})
   ) {
-    logger.debug('include=', 'this.include', 'exclude', this.exclude);
+    logger.debug('include=', this.include, 'exclude=', this.exclude);
   }
 
   async run(): Promise<TestRunnerResult> {
