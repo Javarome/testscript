@@ -1,6 +1,6 @@
 # testscript
 
-Fed up of the difficulty to run tests in this messy world of Node + common JS + ESM + Babel + Jest + TypeScript (or [JavaScript](https://www.npmjs.com/package/@javarome/testscript-js))?
+Fed up of the difficulty to run tests in this messy world of Node + common JS + ESM + Babel + Jest + TypeScript?
 You just want to run your tests of your code, period? The alternative here is as follows:
 
 - Run all TypeScript stuff using [`tsx`](https://github.com/esbuild-kit/tsx) as a drop-in replacement for the `node` command. It just works with TypeScript, and it's fast.
