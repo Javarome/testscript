@@ -1,7 +1,10 @@
 # testscript
 
-Fed up of the difficulty to run tests in this messy world of Node + common JS + ESM + Babel + Jest + TypeScript?
-You just want to run your tests of your code, period? The alternative here is as follows:
+Tired of finding the right configuration to make Node + Common JS, ESM, Babel, Jest and TypeScript work together? \
+Fed up of understanding why the configuration that used to work is not working anymore? \
+Just want to run tests of your code, period? 
+
+The alternative is here, as follows:
 
 - Run all TypeScript stuff using [`tsx`](https://github.com/esbuild-kit/tsx) as a drop-in replacement for the `node` command. It just works with TypeScript, and it's fast.
 - *A test is an executable*: you don't need a test runner to run a single test file. Instead, just execute the test file:
@@ -33,7 +36,7 @@ describe("Some software item", () => {
 testscript
 ````
 
-(make sureto install `tsx` before)
+(make sure to install `tsx` before)
 
 This will output:
 ![Test runner failure output](docs/TestRunner-success.png)
