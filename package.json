@@ -2,10 +2,13 @@
   "name": "@javarome/testscript",
   "type": "module",
   "author": "Jérôme Beau <javarome@gmail.com> (https://javarome.com)",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "description": "Simple, straightforward TypeScript test solution",
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "testscript": "bin/index.ts"
+  },
   "license": "MIT",
   "homepage": "https://github.com/Javarome/testscript#readme",
   "repository": {
@@ -19,9 +22,6 @@
     "test": "npx .",
     "test-one": "tsx src/cli/CLI.test.ts"
   },
-  "bin": {
-    "testscript": "bin/index.ts"
-  },
   "dependencies": {
     "glob": "~10.3.10"
   },
@@ -32,6 +32,7 @@
   },
   "keywords": [
     "test",
+    "unit-testing",
     "typescript"
   ],
   "publishConfig": {
