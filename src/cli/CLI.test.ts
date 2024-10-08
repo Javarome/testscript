@@ -17,8 +17,8 @@ describe("CLI", () => {
     ])
     const args = cli.getArgs<SimpleArgs>()
     expect(args.argString[0]).toBe("Hello")
-    expect(args.argBool[0]).toBe("true")
-    expect(args.argNum[0]).toBe("12")
+    expect(args.argBool[0].toString()).toBe("true")
+    expect(args.argNum[0].toString()).toBe("12")
   })
 
   test("multiple args", () => {
