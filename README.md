@@ -7,11 +7,11 @@ Just want to run tests of your code, period?
 The alternative is here, as follows:
 
 - Run all TypeScript stuff using [`tsx`](https://github.com/esbuild-kit/tsx) as a drop-in replacement for the `node` command. It just works with TypeScript, and it's fast.
-- *A test is an executable*: you don't need a test runner to run a single test file. Instead, just execute the test file:
+- *A test is an autonomous executable*: you don't need a test runner to run a single test file. Instead, just execute the test file:
   ```
   tsx src/My.test.ts
   ````
-  Thanks to the `assert()` predicates, this will throw a `TestError` if the test doesn't pass
+  Thanks to Node's `assert()` predicates, this will throw a `TestError` if the test doesn't pass
   (this can also work with a `tsx` alternative as well, but `tsx` makes it easier).
 - Keep syntax as similar as possible to the syntax used by [Jest](https://jestjs.io) (`describe()`, `test()`, `expect()`, `beforeEach()`...) , which is the most popular framework to test JS/TS.
 

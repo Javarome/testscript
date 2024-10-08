@@ -1,12 +1,12 @@
-import { CLI } from './CLI';
-import { describe, test } from '../TestSuite';
-import { expect } from '../Expression';
-import { FilesArgs } from './FilesArgs';
+import { CLI } from './CLI.js';
+import { describe, test } from '../TestSuite.js';
+import { FilesArgs } from './FilesArgs.js';
+import { expect } from "../expect/index.js"
 
 interface SimpleArgs {
-  argString: string;
-  argBool: boolean;
-  argNum: number
+  argString: string[];
+  argBool: boolean[];
+  argNum: number[]
 }
 
 describe("CLI", () => {
@@ -16,9 +16,9 @@ describe("CLI", () => {
       "/bin/node", "program.js", "--argString", "Hello", "--argBool", "true", "--argNum", "12"
     ])
     const args = cli.getArgs<SimpleArgs>()
-    expect(args.argString).toBe("Hello")
-    expect(args.argBool).toBe("true")
-    expect(args.argNum).toBe("12")
+    expect(args.argString[0]).toBe("Hello")
+    expect(args.argBool[0]).toBe("true")
+    expect(args.argNum[0]).toBe("12")
   })
 
   test("multiple args", () => {

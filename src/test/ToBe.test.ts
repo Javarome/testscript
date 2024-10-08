@@ -1,5 +1,5 @@
-import { expect } from '../Expression';
-import { describe } from '../TestSuite';
+import { describe } from '../TestSuite.js';
+import { expect } from "../expect/index.js"
 
 describe('expect(toBeTested).toBe(expected)', () => {
   expect(1).toBe(1)

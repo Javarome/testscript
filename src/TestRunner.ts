@@ -1,7 +1,7 @@
 import path from 'path';
-import { DefaultLogger, Logger } from './log';
-import { AnsiColor } from './AnsiColor';
 import { globSync } from 'glob';
+import { DefaultLogger, Logger } from './log/index.js';
+import { AnsiColor } from './AnsiColor.js';
 
 export type TestRunnerResult = {
   suites: SuiteResult[]

@@ -1,18 +1,19 @@
-import { TestError } from './TestError';
-import { AnsiColor } from './AnsiColor';
+import { Expression } from './Expression.js';
+import { AnsiColor } from '../AnsiColor.js';
+import { TestError } from '../TestError.js';
 
-export class Expression<T = any> {
-  protected negated = false;
+export class ValueExpression<T = any> extends Expression {
 
   constructor(protected value: T) {
+    super()
   }
 
-  get not(): this {
-    this.negated = true;
+  get not(): ValueExpression {
+    super.not;
     return this;
   }
 
-  ansiDiff(valueStr: string, expectedStr: string): string {
+  protected ansiDiff(valueStr: string, expectedStr: string): string {
     let diffStr = '';
     let color = AnsiColor.bgGreen;
     let colorStart = 0;
@@ -26,6 +27,20 @@ export class Expression<T = any> {
     }
     diffStr += AnsiColor.str(valueStr.substring(colorStart, valueStr.length), AnsiColor.fgBlack, color);
     return diffStr;
+  }
+
+  protected valueStr(value: T): string {
+    let type = typeof value;
+    switch (type) {
+      case 'undefined':
+        return type;
+      case 'object':
+        return JSON.stringify(value);
+      case 'string':
+        return `"${value}"`;
+      default:
+        return value ? value.toString() : 'null';
+    }
   }
 
   protected check(comparison: boolean, expected: T, value = this.value) {
@@ -60,22 +75,4 @@ export class Expression<T = any> {
     let valueExp = JSON.stringify(this.value);
     this.check(valueExp == expectedExpr, expected as any, this.value as any);
   }
-
-  valueStr(value: T): string {
-    let type = typeof value;
-    switch (type) {
-      case 'undefined':
-        return type;
-      case 'object':
-        return JSON.stringify(value);
-      case 'string':
-        return `"${value}"`;
-      default:
-        return value ? value.toString() : 'null';
-    }
-  }
-}
-
-export function expect(result: any): Expression {
-  return new Expression(result);
 }

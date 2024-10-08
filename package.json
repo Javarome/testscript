@@ -1,8 +1,8 @@
 {
   "name": "@javarome/testscript",
   "type": "module",
-  "author": "Jérôme Beau (javarome@gmail.com)",
-  "version": "0.10.7",
+  "author": "Jérôme Beau <javarome@gmail.com> (https://javarome.com)",
+  "version": "0.11.0",
   "description": "Simple, straightfoward TypeScript test solution",
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -17,7 +17,7 @@
     "build": "rm -Rf dist && tsc --project tsconfig.prod.json",
     "prepublishOnly": "npm run build && npm test",
     "test": "npx .",
-    "test-one": "tsx src/test/ToBe.test.ts"
+    "test-one": "tsx src/cli/CLI.test.ts"
   },
   "bin": {
     "testscript": "bin/index.ts"
