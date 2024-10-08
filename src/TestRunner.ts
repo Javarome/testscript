@@ -50,6 +50,7 @@ export class TestRunner {
       const test = path.join(process.cwd(), file);
       await import(test);
     } catch (e) {
+      console.error(e);
       error = e as Error;
     } finally {
       testEnd = performance.now();

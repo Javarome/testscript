@@ -1,5 +1,5 @@
 import { describe, test } from '../TestSuite.js';
-import { expect } from '../expect';
+import { expect } from '../expect/index.js';
 
 describe('expect(func).toThrow(error)', () => {
   expect(() => {}).not.toThrow('err')
