@@ -6,6 +6,7 @@ export type Value = boolean | number | string | object | null | undefined
 export interface Expect {
   <F extends Execution>(actual: F): ExecutionExpression;
 
+  <B extends Boolean>(actual: B): ValueExpression<B>;
   <V extends Value>(actual: V): ValueExpression<V>;
 }
 

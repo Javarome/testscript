@@ -3,16 +3,21 @@
 import * as process from "process"
 import { AnsiColor, TestError, TestRunner } from "../dist/index.js"
 import { CLI } from "../dist/cli/CLI.js"
-import { FilesArgs } from '../src/cli/FilesArgs';
+import { FilesArgs } from "../dist/cli/FilesArgs"
+import { LogTestReporter } from "../dist/report/LogTestReporter.js"
+import { DefaultLogger } from "../dist/log/index.js"
 
 const args = new CLI().getArgs<FilesArgs>()
 const include = args.include || process.env.TESTSCRIPT_INCLUDE?.split(",") || ["**/*.test.ts"]
 const exclude = args.exclude || process.env.TESTSCRIPT_EXCLUDE?.split(",") || ["node_modules/**/*.*"]
-const runner = new TestRunner(include, exclude)
+const logger = new DefaultLogger("testscript")
+TestRunner.reporter = new LogTestReporter(logger, new Intl.NumberFormat(undefined, {maximumFractionDigits: 2}))
+const runner = new TestRunner(include, exclude, logger)
 runner.run().then(result => {
   const successCount = runner.successCount(result)
   const total = result.suites.length
-  const totalTime = AnsiColor.str(`(${runner.durationStr(result.duration)})`, AnsiColor.fgWhite)
+  const totalTime = AnsiColor.str(`(${new LogTestReporter(logger,
+    new Intl.NumberFormat(undefined, {maximumFractionDigits: 2})).durationStr(result.duration)})`, AnsiColor.fgWhite)
   const success = runner.allSucceeded(result)
   if (success) {
     runner.logger.log(AnsiColor.str(`All ${total} test suites succeeded`, AnsiColor.fgGreen), totalTime)

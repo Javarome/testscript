@@ -26,8 +26,5 @@ describe('expect(func).toThrow(error)', () => {
     expect(() => {
       throw new Error()
     }).toThrow()
-    expect(() => {
-      throw new Error()
-    }).toThrow()
   })
 })

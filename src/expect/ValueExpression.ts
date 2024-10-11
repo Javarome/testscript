@@ -39,7 +39,7 @@ export class ValueExpression<T = any> extends Expression {
       case 'string':
         return `"${value}"`;
       default:
-        return value ? value.toString() : 'null';
+        return value === undefined ? "undefined" : value === null ? "null": value.toString()
     }
   }
 

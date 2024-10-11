@@ -22,17 +22,20 @@ const defaultConsole = console
 export class DefaultLogger implements Logger {
 
   readonly log
+  readonly logPart
   readonly debug
   readonly warn
   readonly error
 
-  constructor(public name: string, protected console: LogConsole = defaultConsole, protected logLevels = defaultLogLevels) {
-    this.log = this.logLevels.includes("info") ? (...data: any[]) => this.console.log(this.name + ":", ...data) : NOP
-    this.debug = this.logLevels.includes("debug") ? (...data: any[]) => this.console.debug(this.name + ":",
-      ...data) : NOP
-    this.warn = this.logLevels.includes("warn") ? (...data: any[]) => this.console.warn(this.name + ":",
-      ...data) : NOP
-    this.error = this.logLevels.includes("error") ? (...data: any[]) => this.console.error(this.name + ":",
-      ...data) : NOP
+  constructor(readonly name: string, console: LogConsole = defaultConsole, logLevels = defaultLogLevels, proc: NodeJS.Process = process) {
+    const prefix = name + ":"
+    this.log = logLevels.includes("info") ? (...data: any[]) => console.log(prefix, ...data) : NOP
+    this.logPart = logLevels.includes("info") ? (...data: any[]) => {
+      const str = data.join(" ").replaceAll("\n", "\n" + prefix)
+      proc.stdout.write(str)
+    } : NOP
+    this.debug = logLevels.includes("debug") ? (...data: any[]) => console.debug(prefix, ...data) : NOP
+    this.warn = logLevels.includes("warn") ? (...data: any[]) => console.warn(prefix, ...data) : NOP
+    this.error = logLevels.includes("error") ? (...data: any[]) => console.error(prefix, ...data) : NOP
   }
 }
