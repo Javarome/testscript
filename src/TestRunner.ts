@@ -3,6 +3,7 @@ import { globSync } from "glob"
 import { Logger } from "./log/index.js"
 import { TestContext } from "./TestContext.js"
 import { TestReporter } from "./report/TestReporter.js"
+import { LogTestReporter } from "./report/LogTestReporter"
 
 export type TestRunnerResult = {
   suites: TestContext[]
@@ -11,13 +12,19 @@ export type TestRunnerResult = {
 
 export class TestRunner {
 
-  constructor(protected include: string[], protected exclude: string[],
-              readonly logger: Logger) {
-    logger.debug("include=", this.include, "exclude=", this.exclude)
-  }
+  static instance: TestRunner
 
-  static context = new TestContext("")
-  static reporter: TestReporter
+  context = new TestContext("")
+
+  constructor(protected include: string[],
+              protected exclude: string[],
+              readonly logger: Logger,
+              readonly reporter: TestReporter = new LogTestReporter(logger,
+                new Intl.NumberFormat(undefined, {maximumFractionDigits: 2}))
+  ) {
+    logger.debug("include=", this.include, "exclude=", this.exclude)
+    TestRunner.instance = this
+  }
 
   async run(): Promise<TestRunnerResult> {
     const runStart = performance.now()
@@ -26,13 +33,13 @@ export class TestRunner {
     const suites: TestContext[] = []
     let success = true
     for (const filePath of files) {
-      TestRunner.context = TestRunner.context.enter(filePath)
+      this.context = this.context.enter(filePath)
       try {
         const context = await this.runSuite(filePath)
         success = success && !context.error
         suites.push(context)
       } finally {
-        TestRunner.context = TestRunner.context.leave()!
+        this.context = this.context.leave()!
       }
     }
     const runEnd = performance.now()
@@ -41,8 +48,8 @@ export class TestRunner {
   }
 
   async runSuite(fileName: string): Promise<TestContext> {
-    const context = TestRunner.context
-    const reporter = TestRunner.reporter
+    const context = this.context
+    const reporter = this.reporter
     reporter.testStart(context)
     const filePath = path.join(process.cwd(), fileName)
     await import(filePath)
@@ -51,15 +58,8 @@ export class TestRunner {
   }
 
   allSucceeded(result: TestRunnerResult): boolean {
-    const successCount = this.successCount(result)
+    const successCount = this.context.successCount()
     const total = result.suites.length
     return successCount === total
-  }
-
-  successCount(result: TestRunnerResult): number {
-    return result.suites.reduce((count, suite) => {
-      count += suite.error ? 0 : 1
-      return count
-    }, 0)
   }
 }

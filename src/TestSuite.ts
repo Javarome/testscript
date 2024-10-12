@@ -17,13 +17,22 @@ let beforeAllValue: BeforeAllExecutor
 let beforeEachValue: BeforeEachExecutor
 
 const logger = new DefaultLogger("testscript")
-let context = TestRunner.context || new TestContext(import.meta.url)
-const reporter = TestRunner.reporter || new LogTestReporter(logger,
+const runner = TestRunner.instance
+let ctx
+if (runner) {
+  logger.debug("Found TestRunner.instance", Boolean(TestRunner.instance))
+  ctx = runner.context
+}
+if (!ctx) {
+  ctx = new TestContext(import.meta.url)
+}
+let context: TestContext = ctx
+logger.debug("Using context", ctx)
+const reporter = runner?.reporter || new LogTestReporter(logger,
   new Intl.NumberFormat(undefined, {maximumFractionDigits: 2}))
 
 export function execute<T>(name: string, ...specs: TestSpec<T>[]) {
   context = context.enter(name)
-  let error: Error | undefined
   reporter.testStart(context)
   try {
     for (const spec of specs) {
@@ -41,11 +50,9 @@ export function execute<T>(name: string, ...specs: TestSpec<T>[]) {
       }
     }
   } catch (e) {
-    logger.error(e)
-    error = e as Error
+    context.error = e as Error
   } finally {
     context.end = performance.now()
-    context.error = error
     reporter.testEnd(context)
     context = context.leave()!
   }

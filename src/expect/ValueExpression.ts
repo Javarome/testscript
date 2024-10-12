@@ -50,7 +50,7 @@ export class ValueExpression<T = any> extends Expression {
       const expectedStr = this.valueStr(expected);
       throw new TestError(
         `Got ${this.ansiDiff(valueStr, expectedStr)!} ${AnsiColor.str(`instead of ${(this.negated ? 'not ' : '') +
-         expectedStr}`, AnsiColor.fgRed)}`);
+        AnsiColor.str(expectedStr, AnsiColor.fgGreen)}`, AnsiColor.fgRed)}`);
     }
   }
 

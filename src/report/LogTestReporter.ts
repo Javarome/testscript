@@ -26,17 +26,14 @@ export class LogTestReporter extends TestReporter {
   testEnd(context: TestContext): void {
     let status: string
     let details: string | undefined
-    const error = context.error
-    if (error) {
+    if (context.hasError()) {
       status = AnsiColor.str("FAIL", AnsiColor.fgRed)
-      let stack = error.stack
-      if (stack) {
-        const filePattern = context.name.replaceAll("/", "\/")
-        const errorRegExp = new RegExp(`.*(Error: (.+)\\n)[\\s\\S]*?${filePattern}:\\d+:\\d+\\)\n([\\s\\S]*)`,
-          "gm")
-        let items = errorRegExp.exec(stack)
-        if (items && items.length > 0) {
-          details = AnsiColor.str(items[2] + "\n" + items[3], AnsiColor.fgRed)
+      let error = context.error
+      if (error) {
+        let stack = error.stack
+        if (stack) {
+          const lines = stack.split("\n").filter(s => s.includes(".test.ts"))
+          details = AnsiColor.str(error + "\n" + lines.join("\n"), AnsiColor.fgRed)
         }
       }
     } else if (context.skip) {
