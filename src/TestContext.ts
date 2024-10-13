@@ -1,3 +1,5 @@
+export type ContextType = "root" | "file" | "describe" | "test"
+
 export class TestContext {
 
   context: TestContext[] = []
@@ -10,15 +12,12 @@ export class TestContext {
     return Boolean(this.error) || this.context.filter(c => c.hasError()).length > 0
   }
 
-  constructor(readonly name: string, readonly parent?: TestContext) {
+  constructor(readonly name: string, readonly type: ContextType, readonly parent?: TestContext) {
+    this.start = performance.now()
   }
 
-  get fullName(): string {
-    return (this.parent?.name ? (this.parent.fullName + ".") : "") + this.name
-  }
-
-  enter(name: string): TestContext {
-    const newContext = new TestContext(name, this)
+  enter(name: string, type: ContextType): TestContext {
+    const newContext = new TestContext(name, type, this)
     this.context.push(newContext)
     return newContext
   }
@@ -28,6 +27,7 @@ export class TestContext {
   }
 
   leave(): TestContext | undefined {
+    this.end = performance.now()
     return this.parent
   }
 
@@ -36,5 +36,11 @@ export class TestContext {
       count += context.hasError() ? 0 : 1
       return count
     }, 0)
+  }
+
+  allSucceeded(): boolean {
+    const successCount = this.successCount()
+    const total = this.context.length
+    return successCount === total
   }
 }

@@ -1,7 +1,7 @@
 import { TestRunner } from "./TestRunner.js"
-import { TestContext } from "./TestContext"
-import { LogTestReporter } from "./report/LogTestReporter"
-import { DefaultLogger } from "./log"
+import { ContextType, TestContext } from "./TestContext.js"
+import { LogTestReporter } from "./report/LogTestReporter.js"
+import { DefaultLogger } from "./log/index.js"
 
 export type TestOptions = {
   skip?: boolean
@@ -24,21 +24,20 @@ if (runner) {
   ctx = runner.context
 }
 if (!ctx) {
-  ctx = new TestContext(import.meta.url)
+  ctx = new TestContext("", "root")
 }
 let context: TestContext = ctx
 logger.debug("Using context", ctx)
 const reporter = runner?.reporter || new LogTestReporter(logger,
   new Intl.NumberFormat(undefined, {maximumFractionDigits: 2}))
 
-export function execute<T>(name: string, ...specs: TestSpec<T>[]) {
-  context = context.enter(name)
+export function execute<T>(name: string, type: ContextType, ...specs: TestSpec<T>[]) {
+  context = context.enter(name, type)
   reporter.testStart(context)
   try {
     for (const spec of specs) {
       if (typeof spec === "function") {
         if (!context.skip) {
-          context.start = performance.now()
           const executor = spec as Executor
           executor()
         }
@@ -52,9 +51,9 @@ export function execute<T>(name: string, ...specs: TestSpec<T>[]) {
   } catch (e) {
     context.error = e as Error
   } finally {
-    context.end = performance.now()
-    reporter.testEnd(context)
+    const left = context
     context = context.leave()!
+    reporter.testEnd(left);
   }
 }
 
@@ -64,7 +63,7 @@ export function beforeAll(before: BeforeAllExecutor) {
 
 export function describe(name: string, ...specs: TestSpec<TestSuiteExecutor>[]) {
   beforeAllValue?.()
-  execute(name, ...specs)
+  execute(name, "describe", ...specs)
 }
 
 export function beforeEach(before: BeforeEachExecutor) {
@@ -73,5 +72,5 @@ export function beforeEach(before: BeforeEachExecutor) {
 
 export function test(name: string, ...specs: TestSpec<TestExecutor>[]) {
   beforeEachValue?.()
-  execute(name, ...specs)
+  execute(name, "test", ...specs)
 }

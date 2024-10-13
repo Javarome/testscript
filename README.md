@@ -60,6 +60,15 @@ testscript --include **/*.test.ts --exclude '{out/**,node_modules/**/*.*}'
 
 You can also use the `TESTSCRIPT_INCLUDE` and `TESTSCRIPT_EXCLUDE` env vars.
 
+## Options
+
+A test can be skipped by setting the `skip` property in an option object before the test function parameter:
+```ts
+test("skipped test", {skip: true}, async () => {
+  expect("not tested").toBe(true) // Will not be executed
+})
+```
+
 ## Debugging
 
 Once you have your test scripts ready in your `package.json`, all you need to need all or one test is to set your breakpoints in your tests

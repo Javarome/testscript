@@ -3,18 +3,13 @@ import { globSync } from "glob"
 import { Logger } from "./log/index.js"
 import { TestContext } from "./TestContext.js"
 import { TestReporter } from "./report/TestReporter.js"
-import { LogTestReporter } from "./report/LogTestReporter"
-
-export type TestRunnerResult = {
-  suites: TestContext[]
-  duration: number
-}
+import { LogTestReporter } from "./report/LogTestReporter.js"
 
 export class TestRunner {
 
   static instance: TestRunner
 
-  context = new TestContext("")
+  context = new TestContext("", "root")
 
   constructor(protected include: string[],
               protected exclude: string[],
@@ -26,40 +21,30 @@ export class TestRunner {
     TestRunner.instance = this
   }
 
-  async run(): Promise<TestRunnerResult> {
-    const runStart = performance.now()
+  async run(): Promise<TestContext> {
     const files = globSync(this.include, {ignore: this.exclude})
     this.logger.debug("files", files)
-    const suites: TestContext[] = []
     let success = true
-    for (const filePath of files) {
-      this.context = this.context.enter(filePath)
-      try {
-        const context = await this.runSuite(filePath)
-        success = success && !context.error
-        suites.push(context)
-      } finally {
-        this.context = this.context.leave()!
-      }
+    for (const fileName of files) {
+      const context = await this.runSuite(fileName)
+      success = success && !context.error
     }
-    const runEnd = performance.now()
-    const duration = runEnd - runStart
-    return {suites, duration}
+    this.context.leave()
+    return this.context
   }
 
   async runSuite(fileName: string): Promise<TestContext> {
-    const context = this.context
+    this.context = this.context.enter(fileName, "file")
     const reporter = this.reporter
+    const context = this.context
     reporter.testStart(context)
-    const filePath = path.join(process.cwd(), fileName)
-    await import(filePath)
-    reporter.testEnd(context)
+    try {
+      const filePath = path.join(process.cwd(), fileName)
+      await import(filePath)
+    } finally {
+      this.context = this.context.leave()!
+      reporter.testEnd(context)
+    }
     return context
-  }
-
-  allSucceeded(result: TestRunnerResult): boolean {
-    const successCount = this.context.successCount()
-    const total = result.suites.length
-    return successCount === total
   }
 }
