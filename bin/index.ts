@@ -2,12 +2,12 @@
 
 import * as process from "process"
 import { CLI } from "../dist/cli/CLI.js"
-import { FilesArgs } from "../dist/cli/FilesArgs"
+import { FilesArgs } from "../dist/cli/FilesArgs.js"
 import { LogTestReporter } from "../dist/report/LogTestReporter.js"
 import { DefaultLogger } from "../dist/log/index.js"
-import { TestRunner } from "../src/TestRunner.js"
-import { AnsiColor } from "../src/AnsiColor.js"
-import { TestError } from "../src/TestError.js"
+import { TestRunner } from "../dist/TestRunner.js"
+import { AnsiColor } from "../dist/AnsiColor.js"
+import { TestError } from "../dist/TestError.js"
 
 const args = new CLI().getArgs<FilesArgs>()
 const include = args.include || process.env.TESTSCRIPT_INCLUDE?.split(",") || ["**/*.test.ts"]
