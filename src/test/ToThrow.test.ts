@@ -1,7 +1,7 @@
 import { describe, test } from '../TestSuite.js';
 import { expect } from '../expect/index.js';
 
-describe('expect(func).toThrow(error)', () => {
+describe('ToThrow', () => {
   expect(() => {}).not.toThrow('err')
   expect(() => {
     throw new Error('failed')

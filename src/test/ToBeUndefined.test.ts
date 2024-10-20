@@ -1,7 +1,7 @@
 import { describe } from '../TestSuite.js';
 import { expect } from "../expect/index.js"
 
-describe('expect(toBeTested).toBeUndefined()', () => {
+describe('ToBeUndefined', () => {
   expect(undefined).toBeUndefined()
   expect(1).not.toBeUndefined()
 })

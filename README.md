@@ -60,6 +60,18 @@ testscript --include **/*.test.ts --exclude '{out/**,node_modules/**/*.*}'
 
 You can also use the `TESTSCRIPT_INCLUDE` and `TESTSCRIPT_EXCLUDE` env vars.
 
+## Assertions
+The same assertions as found in Jest can be used:
+- `x.toBe(y)` for `==` approximate comparison (string as number, nullish as other nullish, fasly as other falsy, etc.)
+- `x.toEqual(y)` for strict `===`. Here the above comparisons will fail.
+- `call.toThrow(errMsg)`
+etc.
+
+You can also insert the `not` operator, like in `x.not.toBe(y)`
+
+## Lifecycle
+The same callbacks can be used, like `beforeEach()`, etc.
+
 ## Options
 
 A test can be skipped by setting the `skip` property in an option object before the test function parameter:
@@ -68,6 +80,9 @@ test("skipped test", {skip: true}, async () => {
   expect("not tested").toBe(true) // Will not be executed
 })
 ```
+
+## Reporting
+By default, the `LogTestReporter` is used. See `bin/index.ts` to see how you could provide your own implementation of a `TestReporter`.
 
 ## Debugging
 

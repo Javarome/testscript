@@ -1,7 +1,8 @@
 import { Expression } from "./Expression.js"
 import { TestError } from "../TestError.js"
 
-export type Execution = () => any | (() => Promise<any>);
+export type AsyncExecution = (...args: unknown[]) => Promise<any>
+export type Execution = ((...args: unknown[]) => any) | AsyncExecution;
 
 export class ExecutionExpression extends Expression {
 

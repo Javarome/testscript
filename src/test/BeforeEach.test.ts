@@ -1,8 +1,9 @@
 import { beforeEach, describe, test } from '../TestSuite.js';
 import { expect } from "../expect/index.js"
 
-describe('beforeEach(() => {})', () => {
+describe('BeforeEach', () => {
   let fixture: any;
+
   beforeEach(() => {
     fixture = {}
   })

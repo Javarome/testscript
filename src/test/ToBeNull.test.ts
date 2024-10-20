@@ -1,7 +1,7 @@
-import { describe } from '../TestSuite';
+import { describe } from '../TestSuite.js';
 import { expect } from "../expect/index.js"
 
-describe('expect(toBeTested).toBeNull()', () => {
+describe('ToBeNull', () => {
   expect(null).toBeNull()
   expect('').not.toBeNull()
   expect(1).not.toBeNull()

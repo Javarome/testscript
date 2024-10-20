@@ -2,14 +2,28 @@ export type ContextType = "root" | "file" | "describe" | "test"
 
 export class TestContext {
 
-  context: TestContext[] = []
+  subContexts: TestContext[] = []
   skip = false
   start: number | undefined
   end: number | undefined
+
+  /**
+   * The error that may have occurred at this level.
+   */
   error: Error | undefined
 
+  /**
+   * The error that may have occurred at this level or sublevel(s).
+   */
+  getError(): Error | undefined {
+    return this.error || this.subContexts.find( sub => sub.getError())?.getError()
+  }
+
+  /**
+   * If this context or sub-context(s) failed with an error.
+   */
   hasError(): boolean {
-    return Boolean(this.error) || this.context.filter(c => c.hasError()).length > 0
+    return Boolean(this.error) || this.subContexts.filter(c => c.hasError()).length > 0
   }
 
   constructor(readonly name: string, readonly type: ContextType, readonly parent?: TestContext) {
@@ -18,7 +32,8 @@ export class TestContext {
 
   enter(name: string, type: ContextType): TestContext {
     const newContext = new TestContext(name, type, this)
-    this.context.push(newContext)
+    // console.debug("testscript:", `${this.name}.enter(${name})`)
+    this.subContexts.push(newContext)
     return newContext
   }
 
@@ -32,7 +47,7 @@ export class TestContext {
   }
 
   successCount(): number {
-    return this.context.reduce((count, context) => {
+    return this.subContexts.reduce((count, context) => {
       count += context.hasError() ? 0 : 1
       return count
     }, 0)
@@ -40,7 +55,11 @@ export class TestContext {
 
   allSucceeded(): boolean {
     const successCount = this.successCount()
-    const total = this.context.length
+    const total = this.subContexts.length
     return successCount === total
+  }
+
+  get fullName(): string {
+    return (this.parent?.name ? (this.parent.fullName + ".") : "") + this.name
   }
 }

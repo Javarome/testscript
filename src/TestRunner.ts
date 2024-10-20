@@ -1,24 +1,20 @@
 import path from "path"
 import { globSync } from "glob"
-import { Logger } from "./log/index.js"
+import { Logger } from "./log/Logger.js"
 import { TestContext } from "./TestContext.js"
-import { TestReporter } from "./report/TestReporter.js"
+import { defaultTestReporterOptions, TestReporter } from "./report/TestReporter.js"
 import { LogTestReporter } from "./report/LogTestReporter.js"
 
 export class TestRunner {
 
-  static instance: TestRunner
-
   context = new TestContext("", "root")
 
-  constructor(protected include: string[],
-              protected exclude: string[],
-              readonly logger: Logger,
-              readonly reporter: TestReporter = new LogTestReporter(logger,
-                new Intl.NumberFormat(undefined, {maximumFractionDigits: 2}))
+  constructor(protected include: string[], protected exclude: string[], readonly logger: Logger,
+              readonly reporter: TestReporter = new LogTestReporter(logger, defaultTestReporterOptions)
   ) {
     logger.debug("include=", this.include, "exclude=", this.exclude)
-    TestRunner.instance = this
+    const global = globalThis as any
+    global.testscriptRunner = this
   }
 
   async run(): Promise<TestContext> {
@@ -27,24 +23,23 @@ export class TestRunner {
     let success = true
     for (const fileName of files) {
       const context = await this.runSuite(fileName)
-      success = success && !context.error
+      success = success && !context.hasError()
     }
     this.context.leave()
     return this.context
   }
 
   async runSuite(fileName: string): Promise<TestContext> {
-    this.context = this.context.enter(fileName, "file")
-    const reporter = this.reporter
-    const context = this.context
-    reporter.testStart(context)
     try {
+      this.context = this.context.enter(fileName, "file")
+      this.reporter.testStart(this.context)
       const filePath = path.join(process.cwd(), fileName)
-      await import(filePath)
+      const testModule = await import(filePath)
+      // testSuite.run()
     } finally {
       this.context = this.context.leave()!
-      reporter.testEnd(context)
+      this.reporter.testEnd(this.context)
     }
-    return context
+    return this.context
   }
 }

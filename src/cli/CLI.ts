@@ -5,7 +5,7 @@ export class CLI {
    * @param argv The args array.
    * @param prefix The prefix to detect args ("-" by default)
    */
-  constructor(protected argv: string[] = process.argv, protected prefix = '--') {
+  constructor(protected argv: string[] = process.argv, protected prefix = "--") {
   }
 
   /**
@@ -17,11 +17,13 @@ export class CLI {
     for (let i = 2; i < argv.length; i++) {
       const param = this.getParam(i)
       if (param) {
-        const values= []
+        const values = []
         do {
-          i++;
-          values.push(argv[i])
-        } while (i < argv.length -1 && !this.getParam(i + 1))
+          i++
+          let valueStr = argv[i]
+          let value = valueStr ? valueStr.split(",") : []
+          values.push(value.length < 2 ? value[0] : value)
+        } while (i < argv.length - 1 && !this.getParam(i + 1))
         (args as any)[param] = values
       }
     }
@@ -29,10 +31,10 @@ export class CLI {
   }
 
   protected getParam(i: number): string | undefined {
-    const arg = this.argv[i];
+    const arg = this.argv[i]
     if (arg) {
-      const dash = arg.lastIndexOf(this.prefix);
-      return dash >= 0 ? arg.substring(dash + this.prefix.length) : undefined;
+      const dash = arg.lastIndexOf(this.prefix)
+      return dash >= 0 ? arg.substring(dash + this.prefix.length) : undefined
     }
   }
 }
